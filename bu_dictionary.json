@@ -1,0 +1,59 @@
+{
+    "colmar" : [
+        "colmar"
+    ],
+    "colmar@gryffindor":[
+        "colmar@colmar - gryffindor"
+    ],
+    "colmar@ravenclaw":[
+        "colmar@colmar - ravenclaw"
+    ],
+    "colmar@slytherin":[
+        "colmar@colmar - slytherin"
+    ],
+    "paris" : [
+        "paris"
+    ],
+    "paris@hololize":[
+        "paris@paris - hololize"
+    ],
+    "paris@ice":[
+        "paris@paris - interactive & creative experience"
+    ],
+    "paris@iwasp":[
+        "paris@paris - iwasp"
+    ],
+    "paris@strategy":[
+        "paris@paris - strategy & consulting unit"
+    ],
+    "metz" : [
+        "metz"
+    ],
+    "metz@dsb":[
+        "digital strategy b"
+    ],
+    "luxembourg" : [
+        "luxembourg"
+    ],
+    "luxembourg@dib":[
+        "dib"
+    ],
+    "kehl" : [
+        "kehl"
+    ],
+    "strasbourg" : [
+        "strasbourg","strasbourg@strasbourg - arte"
+    ],
+    "strasbourg@consulting" : [
+        "strasbourg@strasbourg - consulting"
+    ],
+    "strasbourg@digital" : [
+        "strasbourg@strasbourg - digital"
+    ],
+    "strasbourg@technology" : [
+        "strasbourg@strasbourg - technology"
+    ]
+}
+
+
+            
