@@ -20,6 +20,7 @@ import html2text
 import sqlalchemy as sql
 import json
 from pathlib import Path
+from urllib.parse import urlencode
 
 ## Parameters
 url_base = "https://preprod-actinet.actimage.com/index.php"
@@ -79,7 +80,8 @@ def create_qualification_table(table_name, db_engine):
         sql.Column('owner_lastname', sql.String),
         sql.Column('team_owner', sql.String),
         sql.Column('bid_amount', sql.Float),
-        sql.Column('bid_reference', sql.String)
+        sql.Column('bid_reference', sql.String),
+        sql.Column('bid_url', sql.String)
     )
     meta.create_all(db_engine)
 
@@ -106,7 +108,8 @@ def create_sending_table(table_name, db_engine):
         sql.Column('team_owner', sql.String),
         sql.Column('breakdown', sql.Float),
         sql.Column('bid_amount', sql.Float),
-        sql.Column('bid_reference', sql.String)
+        sql.Column('bid_reference', sql.String),
+        sql.Column('bid_url', sql.String)
     )
     meta.create_all(db_engine)
 
@@ -184,6 +187,23 @@ def clean_senders(bid):
     senders[0]["winner"] = True
 
     return bid
+
+def build_bid_url(bid_id,etape_key=None,bid_url_base="https://actinet.actimage.com/index.php"):
+    """
+    build bid _url from bid_id and etape_key
+    :param bid_id: int: id of the bid
+    :param etape_key: int, for qualif it's two
+    :param bid_url_base:
+    :return:
+    """
+
+    param_dict={"module":"business",
+                "action":"adminSuivis",
+                "business_id":bid_id,
+                "etape_key":etape_key}
+
+    return bid_url_base +"?"+ urlencode(param_dict)
+
 
 
 def select_senders(bid):
@@ -275,6 +295,7 @@ for bid in bids:
         row_qualif["bid_reference"] = bid["bid_reference"]
         row_qualif["bid_amount"] = bid["amount"]
         row_qualif["bid_id"] = int(bid["id"])
+        row_qualif["bid_url"] = build_bid_url(row_qualif["bid_id"], etape_key=2)
         data_qualif.append(row_qualif)
 
     if senders is not None:
@@ -288,6 +309,7 @@ for bid in bids:
             row_send["bid_reference"] = bid["bid_reference"]
             row_send["bid_amount"] = bid["amount"]
             row_send["bid_id"] = int(bid["id"])
+            row_send["bid_url"] = build_bid_url(row_send["bid_id"])
             data_send.append(row_send)
         for team in senders["winner_teams"]:
             row_send = {}
@@ -298,6 +320,7 @@ for bid in bids:
             row_send["bid_reference"] = bid["bid_reference"]
             row_send["bid_amount"] = bid["amount"]
             row_send["bid_id"] = int(bid["id"])
+            row_send["bid_url"] = build_bid_url(row_send["bid_id"])
             data_send.append(row_send)
 
 ## Convert to pandas dataframe and save to SQL
