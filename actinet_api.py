@@ -20,6 +20,7 @@ import html2text
 import sqlalchemy as sql
 import json
 from pathlib import Path
+import pathlib
 from urllib.parse import urlencode
 
 ## Parameters
@@ -39,6 +40,28 @@ class Result():
     def get_actinet(self):
         return get_actinet()
 
+def read_bu_excel(
+        excel_file ='C:/Users/christian.baillard/ACTIMAGE CONSULTING SAS/BU Colmar Projects - Reporting 555/PROG/Actimage_team_managers.xlsx'):
+    """
+    
+    :param excel_file_path having the matches between aliases and real team names 
+    :return: dictionnary key values for aliases
+    """
+    excel_file = pathlib.Path(excel_file)
+    df = pd.read_excel(excel_file)
+
+    bu_dict = {}
+    for index, row in df.iterrows():
+        key = row['Team name']
+        values = row["Team aliases"].split(";")
+        values = [x.replace(u'\xa0', u' ').strip() for x in values]
+        bu_dict[key] = values
+
+    ### Switch key/values
+
+    bu_dict = {z: x for x, y in bu_dict.items() for z in y}
+
+    return bu_dict
 
 def read_bu_json(
         json_path="C:/Users/christian.baillard/ACTIMAGE CONSULTING SAS/BU Colmar Projects - Reporting 555/PROG/bu_dictionary.json"):
@@ -48,7 +71,7 @@ def read_bu_json(
     :return: dictionary
     """
 
-    json_file_path = Path(json_path)
+    json_file_path = pathlib.Path(json_path)
 
     # Opening JSON file
     with open(json_file_path) as json_file:
@@ -336,7 +359,7 @@ df_send["team_owner"] = df_send["team_owner"].str.lower()
 ####### Map teams names properly based on bu dictionary
 
 try:
-    dict_bu = read_bu_json()
+    dict_bu = read_bu_excel()
     up_keys = df_qualif["team_owner"].append(df_send["team_owner"]).dropna().unique().tolist()
     new_dict = {x: x for x in up_keys if x not in dict_bu.keys()}
     dict_bu.update(new_dict)
